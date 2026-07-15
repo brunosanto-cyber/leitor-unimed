@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leitor de Cotações - Unimed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between font-sans">
+
+    <main class="max-w-3xl mx-auto my-10 p-6 bg-white rounded-2xl shadow-sm border border-slate-100 flex-grow w-full">
+        <div class="border-b border-slate-100 pb-5 mb-6 text-center md:text-left">
+            <h1 class="text-2xl font-bold text-slate-900">Extrator de Cotações Unimed</h1>
+            <p class="text-sm text-slate-500 mt-1">Insira o relatório HTML gerado pelo sistema para obter a lista formatada para o Excel.</p>
+        </div>
+
+        <div id="drop-zone" class="border-2 border-dashed border-slate-200 hover:border-teal-500 rounded-xl p-8 text-center cursor-pointer transition-colors bg-slate-50/50">
+            <input type="file" id="file-input" accept=".html,.htm" class="hidden" />
+            <div class="flex flex-col items-center justify-center space-y-2">
+                <svg class="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                <p class="text-sm font-medium text-slate-700">Arraste seu relatório HTML aqui ou <span class="text-teal-600 underline">busque no computador</span></p>
+                <p class="text-xs text-slate-400">Apenas arquivos no formato .html ou .htm</p>
+            </div>
+        </div>
+
+        <div id="result-container" class="mt-8 hidden space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-lg font-semibold text-slate-900">Dados Extraídos</h2>
+                <button id="copy-btn" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white text-sm font-medium rounded-lg transition-all flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                    Copiar para o Excel
+                </button>
+            </div>
+
+            <div class="relative">
+                <textarea id="output-text" readonly class="w-full h-80 p-4 font-mono text-sm bg-slate-900 text-slate-100 rounded-xl border border-slate-800 focus:outline-none resize-none"></textarea>
+                <div id="toast" class="absolute bottom-4 right-4 bg-emerald-500 text-white text-xs px-3 py-1.5 rounded-md shadow-lg hidden">Copiado!</div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center py-6 border-t border-slate-100 text-xs text-slate-400">
+        Desenvolvido para automatização de processos internos.
+    </footer>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const resultContainer = document.getElementById('result-container');
+        const outputText = document.getElementById('output-text');
+        const copyBtn = document.getElementById('copy-btn');
+        const toast = document.getElementById('toast');
+
+        // Eventos de clique para abrir seleção de arquivo
+        dropZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+        // Eventos de arrastar e soltar
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-teal-500', 'bg-teal-50/10');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-teal-500', 'bg-teal-50/10');
+            }, false);
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const file = dt.files[0];
+            handleFile(file);
+        });
+
+        // Função principal de processamento do arquivo
+        function handleFile(file) {
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                processHTML(content);
+            };
+            reader.readAsText(file);
+        }
+
+        // Parseador do documento HTML
+        function processHTML(htmlText) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlText, 'text/html');
+
+            // Função auxiliar para pegar o texto de um elemento com segurança
+            const getVal = (id) => {
+                const element = doc.getElementById(id);
+                return element ? element.textContent.trim() : '';
+            };
+
+            // 1. Nome Fantasia
+            const nomeFantasia = getVal('field_17');
+
+            // 2 e 3. CNAE 1º (Apenas números / Completo)
+            const cnaeCompleto = getVal('field_22');
+            const cnaeNumeros = cnaeCompleto ? cnaeCompleto.split(' - ')[0] : '';
+
+            // 4. Texto Estático
+            const funcionariosDep = "Funcionários + Dependentes";
+
+            // 5. Tipo de Contratação
+            const tipoContratacao = getVal('field_35');
+
+            // 6. CNPJ
+            const cnpj = getVal('field_15');
+
+            // 7. Nome do Corretor
+            const nomeCorretor = getVal('field_31');
+
+            // 8. Nº Cotação
+            const numCotacao = getVal('field_3');
+
+            // 9. Nº Cenário
+            const numCenario = getVal('field_4');
+
+            // 10. Unimed
+            const unimed = getVal('field_11');
+
+            // Montagem da lista linha a linha
+            const outputLines = [
+                nomeFantasia,
+                cnaeNumeros,
+                cnaeCompleto,
+                funcionariosDep,
+                tipoContratacao,
+                cnpj,
+                nomeCorretor,
+                numCotacao,
+                numCenario,
+                unimed
+            ];
+
+            // Exibir no campo de texto
+            outputText.value = outputLines.join('\n');
+            resultContainer.classList.remove('hidden');
+        }
+
+        // Ação de cópia rápida
+        copyBtn.addEventListener('click', () => {
+            if (!outputText.value) return;
+            
+            navigator.clipboard.writeText(outputText.value).then(() => {
+                toast.classList.remove('hidden');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

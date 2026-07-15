@@ -129,6 +129,9 @@
             // 10. Unimed
             const unimed = getVal('field_11');
 
+            // 11. Sexo Feminino (field_59)
+            const sexoFeminino = getVal('field_59');
+
             // Montagem da lista inicial linha a linha
             const outputLines = [
                 nomeFantasia,
@@ -140,7 +143,8 @@
                 nomeCorretor,
                 numCotacao,
                 numCenario,
-                unimed
+                unimed,
+                sexoFeminino
             ];
 
             let finalOutput = outputLines.join('\n');
@@ -178,7 +182,7 @@
                             tRows.push(rowLabel + '\t' + rowValues.join('\t'));
                         }
 
-                        // Concatena os dados gerados abaixo das 10 primeiras linhas de informação geral
+                        // Concatena os dados gerados abaixo das 11 primeiras linhas de informação geral
                         finalOutput += '\n\n' + tHeader + '\n' + tRows.join('\n');
                     }
                 }

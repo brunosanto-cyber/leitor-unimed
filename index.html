@@ -150,7 +150,7 @@
                 return element ? element.textContent.trim() : '';
             };
 
-            // Linha 1 a 11
+            // Linhas 1 a 11
             const nomeFantasia = getVal('field_17');
             const cnaeCompleto = getVal('field_22');
             const cnaeNumeros = cnaeCompleto ? cnaeCompleto.split(' - ')[0] : '';
@@ -183,7 +183,7 @@
 
             let finalOutput = outputLines.join('\n');
 
-            // Lógica de Transposição da Tabela de Distribuição Etária
+            // 1ª Tabela Extra: Transposição de Distribuição Etária
             const ageTable = doc.getElementById('customgrid_43');
             if (ageTable) {
                 const rows = Array.from(ageTable.querySelectorAll('tr'));
@@ -213,6 +213,28 @@
                         }
 
                         finalOutput += '\n\n' + tHeader + '\n' + tRows.join('\n');
+                    }
+                }
+            }
+
+            // 2ª Tabela Extra: Distribuição de Vidas por Localidade (Cópia exata)
+            const locTable = doc.getElementById('customgrid_44');
+            if (locTable) {
+                const locRows = Array.from(locTable.querySelectorAll('tr'));
+                if (locRows.length > 0) {
+                    let locOutput = [];
+                    locRows.forEach(row => {
+                        // Captura os 'th' (cabeçalho) e 'td' (dados) de cada linha
+                        const cells = Array.from(row.querySelectorAll('th, td'));
+                        if (cells.length > 0) {
+                            const rowData = cells.map(cell => cell.textContent.trim());
+                            // Junta as células com TAB
+                            locOutput.push(rowData.join('\t'));
+                        }
+                    });
+                    
+                    if (locOutput.length > 0) {
+                        finalOutput += '\n\n' + locOutput.join('\n');
                     }
                 }
             }

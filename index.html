@@ -1,644 +1,236 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>
-	Joker - Impressão do Formulário - Seguros Unimed
-</title><meta http-equiv="cache-control" content="no-cache"><meta http-equiv="cache-control" content="no-store"><meta http-equiv="cache-control" content="private"><meta http-equiv="cache-control" content="max-age=0, must-revalidate"><meta http-equiv="expires" content="now-1"><meta http-equiv="pragma" content="no-cache">
-<style type="text/css">
-    :root {
-        --unimed-dark-blue: #002d5c;
-        --unimed-light-blue: #00aeef;
-        --text-white: #ffffff;
-        --text-dark: #343a40;
-        --text-label: #6c757d;
-        --bg-main: #f4f7f6;
-        --bg-card: #ffffff;
-        --border-color: #e9ecef;
-    }
-
-    body {
-        margin: 0;
-        padding: 0;
-        background-color: var(--bg-main);
-        font-family: 'Open Sans', sans-serif;
-        color: var(--text-dark);
-        font-size: 14px;
-    }
-
-    form1 {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 0;
-    }
-
-    .main-container {
-        width: 1000px;
-        margin: 20px auto;
-        box-sizing: border-box;
-    }
-
-    /* Cabeçalho de Marca */
-    .brand-header {
-        background-color: var(--unimed-dark-blue);
-        padding: 20px 40px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-radius: 12px 12px 0 0;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .brand-logo-container {
-        display: flex;
-        align-items: center;
-    }
-
-    .brand-logo {
-        height: 80px; /* Ajuste para o tamanho da logo */
-        margin-right: 15px;
-    }
-
-    .header-info-container {
-        text-align: right;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-    }
-
-    .header-info-container #lblTitulo {
-        color: var(--text-white);
-        font-size: 20px;
-        font-weight: 700;
-        margin: 0 0 5px 0;
-        display: block;
-    }
-
-    .print-info {
-        color: var(--text-white);
-        font-size: 13px;
-        margin: 0;
-    }
-
-    /* Conteúdo Principal (Dashboard) */
-    .dashboard-container {
-        background-color: var(--bg-main);
-        padding: 30px;
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-        border-radius: 0 0 12px 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        box-sizing: border-box;
-        width: 100%;
-    }
-
-    /* Cartões de Seção */
-    .card {
-        background-color: var(--bg-card);
-        border-radius: 10px;
-        padding: 25px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-
-    .card-header {
-        border-left: 6px solid var(--unimed-light-blue);
-        padding-left: 15px;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-    }
-
-    .card-header h2 {
-        color: var(--unimed-dark-blue);
-        font-size: 18px;
-        font-weight: 700;
-        margin: 0;
-    }
-
-    .card-icon {
-        font-size: 20px;
-        margin-right: 10px;
-        color: var(--unimed-dark-blue);
-    }
-
-    /* Grid de Dados */
-    .data-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-    }
-
-    .data-row {
-        display: flex;
-        justify-content: flex-start;
-        align-items: baseline;
-    }
-
-    .data-row .cssLabelPrint {
-        color: var(--text-label);
-        font-weight: 600;
-        font-size: 13px;
-        margin-right: 10px;
-        min-width: 150px;
-        text-align: right;
-    }
-
-    .data-row .value {
-        color: var(--text-dark);
-        font-weight: 700;
-        font-size: 14px;
-    }
-
-    .data-pair-wide {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 15px;
-    }
-
-    .data-pair-wide .label {
-        color: var(--text-label);
-        font-weight: 600;
-        font-size: 13px;
-        margin-bottom: 5px;
-    }
-
-    .data-pair-wide .value {
-        color: var(--text-dark);
-        font-weight: 700;
-        font-size: 14px;
-        white-space: pre-wrap; /* Para observações longas */
-    }
-
-    /* Tabelas de Dados */
-    .data-table-container {
-        margin-top: 15px;
-        overflow-x: auto;
-    }
-
-    .data-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-    }
-
-    .data-table thead {
-        background-color: var(--unimed-dark-blue);
-        color: var(--text-white);
-    }
-
-    .data-table th {
-        padding: 12px 15px;
-        text-align: left;
-        font-weight: 600;
-    }
-
-    .data-table tbody tr {
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    .data-table tbody tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
-
-    .data-table td {
-        padding: 12px 15px;
-        color: var(--text-dark);
-    }
-
-    .data-table th[scope="col"] {
-        white-space: nowrap;
-    }
-
-    .data-table td[align="right"], .data-table th[align="right"] {
-        text-align: right;
-    }
-
-    /* Ajustes específicos para tabelas de distribuição */
-    #customgrid_43 th[scope="col"] {
-        width: auto;
-    }
-
-    #customgrid_43 th:nth-child(1), #customgrid_43 td:nth-child(1) { width: 100px; }
-    #customgrid_43 th:nth-child(2), #customgrid_43 td:nth-child(2) { width: 120px; }
-    #customgrid_43 th:nth-child(3), #customgrid_43 td:nth-child(3) { width: 180px; }
-
-    #customgrid_44 th:nth-child(1), #customgrid_44 td:nth-child(1) { width: 80px; }
-    #customgrid_44 th:nth-child(2), #customgrid_44 td:nth-child(2) { width: 120px; }
-    #customgrid_44 th:nth-child(3), #customgrid_44 td:nth-child(3) { width: 100px; }
-    #customgrid_44 th:nth-child(4), #customgrid_44 td:nth-child(4) { width: 40px; }
-    #customgrid_44 th:nth-child(5), #customgrid_44 td:nth-child(5) { width: 180px; }
-
-    #customgrid_164 th:nth-child(1), #customgrid_164 td:nth-child(1) { width: 80px; }
-    #customgrid_164 th:nth-child(2), #customgrid_164 td:nth-child(2) { width: 120px; }
-    #customgrid_164 th:nth-child(3), #customgrid_164 td:nth-child(3) { width: 180px; }
-
-    /* Outros Ajustes */
-    .cssRequiredTable { color: #dc3545; font-weight: bold; }
-    .hidden-fields { display: none; }
-</style>
-</head>
-<body>
-    <form name="form1" method="post" action="https://joker.segurosunimed.com.br/PrintForm.Aspx" id="form1">
-        <div class="hidden-fields">
-            <input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="">
-            <input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="">
-            <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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">
-            <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="E984C9C3">
-            <input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="">
-        </div>
-
-        <script type="text/javascript">
-        //<![CDATA[
-        var theForm = document.forms['form1'];
-        if (!theForm) {
-            theForm = document.form1;
-        }
-        function __doPostBack(eventTarget, eventArgument) {
-            if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
-                theForm.__EVENTTARGET.value = eventTarget;
-                theForm.__EVENTARGUMENT.value = eventArgument;
-                theForm.submit();
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extrator de Cotações - Seguros Unimed</title>
+    <!-- Tailwind CSS para o design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuração das cores da marca Seguros Unimed -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        unimed: {
+                            dark: '#002B49',   /* Azul Escuro Unimed */
+                            light: '#009EDB',  /* Azul Claro/Ciano Unimed */
+                            green: '#009640'   /* Verde Unimed para sucesso */
+                        }
+                    }
+                }
             }
         }
-        //]]>
-        </script>
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
 
-        <div class="main-container">
-            <header class="brand-header">
-                <div class="brand-logo-container">
-                    <img src="image_3.png" alt="Seguros Unimed Logo" class="brand-logo">
+    <!-- Cabeçalho com as cores e logo da marca -->
+    <header class="bg-unimed-dark w-full shadow-md py-4">
+        <div class="max-w-4xl mx-auto px-6 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <!-- Logo da Seguros Unimed -->
+                <div class="bg-white p-1 rounded-lg shadow-sm">
+                    <img src="image_e3d046.png" alt="Seguros Unimed" class="h-12 w-12 object-contain">
                 </div>
-                <div class="header-info-container">
-                    <span id="lblTitulo">Cotador Saúde. Cotação 13841. Cenário: 23929 - UDIACO COMERCIO E INDUSTRIA DE FERRO E ACO LTDA</span>
-                    <p class="print-info">Impresso em 15/07/2026 16:40</p>
+                <div>
+                    <h1 class="text-xl font-bold text-white tracking-wide">Extrator de Cotações</h1>
+                    <p class="text-xs text-unimed-light font-medium uppercase tracking-wider">Ferramenta Interna</p>
                 </div>
-            </header>
-
-            <div class="dashboard-container">
-
-                <section class="card" id="processo-resumo">
-                    <div class="card-header">
-                        <i class="card-icon">📄</i>
-                        <h2>Formulário do Processo</h2>
-                    </div>
-                    <div class="data-grid">
-                        <div class="data-row"><span id="cite_label_3" class="cssLabelPrint">Nº Cotação:</span> <span id="field_3" class="value">13841</span></div>
-                        <div class="data-row"><span id="cite_label_4" class="cssLabelPrint">Nº Cenário:</span> <span id="field_4" class="value">23929</span></div>
-                        <div class="data-row"><span id="cite_label_5" class="cssLabelPrint">Nº Cenário Referência:</span> <span id="field_5" class="value"></span></div>
-                        <div class="data-row"><span id="cite_label_6" class="cssLabelPrint">Fatores Copiados da Referência?:</span> <span id="field_6" class="value">N/A</span></div>
-                        <div class="data-row"><span id="cite_label_8" class="cssLabelPrint">Data/Hora Criação:</span> <span id="field_8" class="value">15/07/2026 19:04:01</span></div>
-                        <div class="data-row"><span id="cite_label_9" class="cssLabelPrint">Analise Técnica:</span> <span id="field_9" class="value">Sim</span></div>
-                    </div>
-                </section>
-
-                <section class="card" id="proponente-dados">
-                    <div class="card-header">
-                        <i class="card-icon">🏢</i>
-                        <h2>Dados do Proponente</h2>
-                    </div>
-                    <div class="data-grid">
-                        <div class="data-row"><span id="cite_label_11" class="cssLabelPrint">Unimed:</span> <span id="field_11" class="value">ER SÃO PAULO</span></div>
-                        <div class="data-row"><span id="cite_label_12" class="cssLabelPrint">Executivo Unimed:</span> <span id="field_12" class="value">ER SÃO PAULO -> Neide Alves Silva</span></div>
-                        <div class="data-row"><span id="cite_label_15" class="cssLabelPrint">CNPJ:</span> <span id="field_15" class="value">71.810.105/0001-54</span></div>
-                        <div class="data-row"><span id="cite_label_16" class="cssLabelPrint">Razão Social:</span> <span id="field_16" class="value">UDIACO COMERCIO E INDUSTRIA DE FERRO E ACO LTDA</span></div>
-                        <div class="data-row"><span id="cite_label_17" class="cssLabelPrint">Nome Fantasia:</span> <span id="field_17" class="value">UDIACO COMERCIO E INDUSTRIA DE FERRO E ACO LTDA</span></div>
-                        <div class="data-pair-wide"><span id="cite_label_18" class="label">Endereço:</span> <span id="field_18" class="value">COPAIBA, ESTRADA 601, JARDIM CECILIA CRISTINA, CARAPICUIBA - SP, 06329050</span></div>
-                        <div class="data-row"><span id="cite_label_19" class="cssLabelPrint">Score:</span> <span id="field_19" class="value"></span></div>
-                        <div class="data-row"><span id="cite_label_20" class="cssLabelPrint">Escritório Regional:</span> <span id="field_20" class="value"></span></div>
-                        <div class="data-row"><span id="cite_label_21" class="cssLabelPrint">Natureza:</span> <span id="field_21" class="value">2062 - SOCIEDADE EMPRESÁRIA LIMITADA</span></div>
-                        <div class="data-pair-wide"><span id="cite_label_22" class="label">CNAE 1º:</span> <span id="field_22" class="value">4672-9-00 - COMÉRCIO ATACADISTA DE FERRAGENS E FERRAMENTAS</span></div>
-                        <div class="data-row"><span id="cite_label_23" class="cssLabelPrint">CNAE 2º:</span> <span id="field_23" class="value"></span></div>
-                        <div class="data-row"><span id="cite_label_24" class="cssLabelPrint">Fundação:</span> <span id="field_24" class="value">06/07/1993</span></div>
-                        <div class="data-row"><span id="cite_label_25" class="cssLabelPrint">Situação:</span> <span id="field_25" class="value">ATIVA</span></div>
-                        <div class="data-row"><span id="cite_label_26" class="cssLabelPrint">E-mail:</span> <span id="field_26" class="value">CONTABIL@CPAULISTA.COM.BR</span></div>
-                        <div class="data-row"><span id="cite_label_27" class="cssLabelPrint">Funcionários:</span> <span id="field_27" class="value"></span></div>
-                        <div class="data-row"><span id="cite_label_28" class="cssLabelPrint">Filiais:</span> <span id="field_28" class="value"></span></div>
-                    </div>
-                </section>
-
-                <section class="card" id="corretor-associado">
-                    <div class="card-header">
-                        <i class="card-icon">🤝</i>
-                        <h2>Corretor Associado</h2>
-                    </div>
-                    <div class="data-grid">
-                        <div class="data-row"><span id="cite_label_30" class="cssLabelPrint">Código do Corretor:</span> <span id="field_30" class="value">1204542</span></div>
-                        <div class="data-row"><span id="cite_label_31" class="cssLabelPrint">Nome do Corretor:</span> <span id="field_31" class="value">SRO BROKERS CORRETORA DE SEGUROS LTDA</span></div>
-                        <div class="data-row"><span id="cite_label_32" class="cssLabelPrint">Corretor Premium:</span> <span id="field_32" class="value">Não</span></div>
-                    </div>
-                </section>
-
-                <section class="card" id="planos-anteriores">
-                    <div class="card-header">
-                        <i class="card-icon">📜</i>
-                        <h2>Planos Anteriores</h2>
-                    </div>
-                    <div class="data-table-container">
-                        <table class="data-table" id="customgrid_33">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Nome Congênere</th><th scope="col">Última Fatura</th><th scope="col">Copart. Revertida para Empresa</th><th scope="col">Há Coparticipação</th><th scope="col">Relatório Maiores Utilizadores</th><th scope="col">Relatório de Sinistralidades</th><th scope="col">Sinistr. é Reduzida de Copart.</th><th scope="col">Sou o Atual Corretor da Conta</th><th scope="col">Observações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>AMIL</td><td>329.586,00</td><td>Não</td><td>Não</td><td>Não</td><td>Sim</td><td>Não</td><td>Não</td><td>&nbsp;</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <section class="card" id="cenario-coparticipacao">
-                    <div class="card-header">
-                        <i class="card-icon">⚙️</i>
-                        <h2>Dados do Cenário</h2>
-                    </div>
-                    <div class="data-grid">
-                        <div class="data-row"><span id="cite_label_35" class="cssLabelPrint">Tipo de Contratação:</span> <span id="field_35" class="value">Compulsório</span></div>
-                        <div class="data-pair-wide"><span id="cite_label_36" class="label">Observações do Placement:</span> <span id="field_36" class="value">Prezados, boa tarde!
-
-Segue abaixo informações disponíveis para cotação:
- 
--Conforme NOVO padrão de vigência do contrato considerar 24 meses
-- Congênere: Amil
-- Compulsório: Encampação
-- Contributário : Não
-- Copay: Não
-- Sinistro: Sim
-
-
-PARTICULARIDADE DA MASSA;
-
--09 AFASTADOS
--04 Crônicos
-
-Atenciosamente, 
-Meire Rocha
-Núcleo de Estudos Saúde e Odonto
-Ticket n° 46691917064
-Executivo: NEIDE ER-SP</span></div>
-                        <div class="data-pair-wide"><span id="cite_label_37" class="label">Informe qual o modelo de contratação de elegibilidade:</span> <span id="field_37" class="value">Encampação (100% Plano anterior)</span></div>
-                        <div class="data-pair-wide"><span id="cite_label_38" class="label">Observações adicionais (Elegibilidade):</span> <span id="field_38" class="value">Encampação (100% Plano anterior)</span></div>
-                        <div class="data-row"><span id="cite_label_39" class="cssLabelPrint">Percentual Rede Atendimento Odonto:</span> <span id="field_39" class="value">99.53</span></div>
-                    </div>
-                    <div style="margin-top:20px;">
-                        <div class="card-header">
-                            <i class="card-icon">💰</i>
-                            <h2>Dados de Coparticipação</h2>
-                        </div>
-                        <div class="data-row"><span id="cite_label_41" class="cssLabelPrint">A Coparticipação Será:</span> <span id="field_41" class="value">Revertida à Seguradora</span></div>
-                    </div>
-                </section>
-
-                <section class="card" id="coparticipacao-tabela">
-                    <div class="card-header">
-                        <i class="card-icon">🧮</i>
-                        <h2>Coparticipação</h2>
-                    </div>
-                    <div class="data-table-container">
-                        <table class="data-table" id="customgrid_42">
-                            <thead>
-                                <tr>
-                                    <th scope="col">ID_Plano</th><th scope="col">Produto</th><th scope="col">Plano</th><th scope="col">Coparticipação</th><th scope="col">Valor (%)</th><th scope="col">Exames Especiais</th><th scope="col">Lim. Cons. Eletivas</th><th scope="col">Lim. Atend. PS</th><th scope="col">Lim. Ex. Básicos</th><th scope="col">Lim. Ex. Especiais</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>CORPCPENF</td><td>CORPORATIVO</td><td>CORPORATIVO COMPACTO ENF</td><td>Não</td><td>0,00</td><td>Não</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-                                <tr><td>CORPSUPAP</td><td>CORPORATIVO</td><td>CORPORATIVO SUPERIOR APTO</td><td>Não</td><td>0,00</td><td>Não</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-                                <tr><td>CORPSUPPAP</td><td>CORPORATIVO</td><td>CORPORATIVO SUPERIOR PLUS APTO</td><td>Não</td><td>0,00</td><td>Não</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <section class="card" id="distribuicao-etaria">
-                    <div class="card-header">
-                        <i class="card-icon">📊</i>
-                        <h2>Distribuição Etária</h2>
-                    </div>
-                    <div class="data-table-container">
-                        <table class="data-table" id="customgrid_43">
-                            <thead>
-                                <tr>
-                                    <th scope="col">ID_Plano</th><th scope="col">Produto</th><th scope="col">Plano</th><th align="right" scope="col">00 a 18</th><th align="right" scope="col">19 a 23</th><th align="right" scope="col">24 a 28</th><th align="right" scope="col">29 a 33</th><th align="right" scope="col">34 a 38</th><th align="right" scope="col">39 a 43</th><th align="right" scope="col">44 a 48</th><th align="right" scope="col">49 a 53</th><th align="right" scope="col">54 a 58</th><th align="right" scope="col">59 ou +</th><th align="right" scope="col">Total</th>
-                                <tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>CORPCPENF</td><td>CORPORATIVO</td><td>CORPORATIVO COMPACTO ENF</td><td align="right">29</td><td align="right">54</td><td align="right">60</td><td align="right">58</td><td align="right">65</td><td align="right">78</td><td align="right">95</td><td align="right">75</td><td align="right">51</td><td align="right">57</td><td align="right">622</td></tr>
-                                <tr><td>CORPSUPAP</td><td>CORPORATIVO</td><td>CORPORATIVO SUPERIOR APTO</td><td align="right">0</td><td align="right">0</td><td align="right">0</td><td align="right">1</td><td align="right">0</td><td align="right">0</td><td align="right">3</td><td align="right">4</td><td align="right">3</td><td align="right">9</td><td align="right">20</td></tr>
-                                <tr><td>CORPSUPPAP</td><td>CORPORATIVO</td><td>CORPORATIVO SUPERIOR PLUS APTO</td><td align="right">0</td><td align="right">0</td><td align="right">0</td><td align="right">0</td><td align="right">0</td><td align="right">0</td><td align="right">0</td><td align="right">0</td><td align="right">0</td><td align="right">3</td><td align="right">3</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <section class="card" id="distribuicao-localidade">
-                    <div class="card-header">
-                        <i class="card-icon">📍</i>
-                        <h2>Distribuição de Vidas por Localidade</h2>
-                    </div>
-                    <div class="data-table-container">
-                        <table class="data-table" id="customgrid_44">
-                            <thead>
-                                <tr>
-                                    <th scope="col">ID_Produto</th><th scope="col">Produto</th><th scope="col">ID_Localidade</th><th scope="col">UF</th><th scope="col">Município</th><th align="right" scope="col">Vidas (nº)</th><th align="right" scope="col">Fator (%)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>7</td><td>CE</td><td>Fortaleza</td><td align="right">1</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>79</td><td>SP</td><td>Guarujá</td><td align="right">2</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>3620</td><td>RJ</td><td>Quatis</td><td align="right">2</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>3663</td><td>SP</td><td>Araçariguama</td><td align="right">1</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>250</td><td>SP</td><td>Caieiras</td><td align="right">1</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>68</td><td>SP</td><td>Taboão da Serra</td><td align="right">1</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>38</td><td>SP</td><td>Barueri</td><td align="right">17</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>3777</td><td>SP</td><td>Carapicuíba</td><td align="right">200</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>2</td><td>RJ</td><td>Rio de Janeiro</td><td align="right">1</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>14</td><td>SP</td><td>Santo André</td><td align="right">1</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>4116</td><td>SP</td><td>Vargem Grande Paulista</td><td align="right">2</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>1</td><td>SP</td><td>São Paulo</td><td align="right">50</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>141</td><td>RJ</td><td>Barra Mansa</td><td align="right">3</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>365</td><td>SP</td><td>Francisco Morato</td><td align="right">1</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>3926</td><td>SP</td><td>Jandira</td><td align="right">13</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>4064</td><td>SP</td><td>Santana de Parnaíba</td><td align="right">1</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>142</td><td>SP</td><td>Embu das Artes</td><td align="right">1</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>49</td><td>RJ</td><td>Volta Redonda</td><td align="right">6</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>131</td><td>SP</td><td>Itapevi</td><td align="right">25</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>3721</td><td>SP</td><td>Campo Limpo Paulista</td><td align="right">1</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>85</td><td>RJ</td><td>Resende</td><td align="right">29</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>22</td><td>SP</td><td>Osasco</td><td align="right">261</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>109</td><td>SP</td><td>Cotia</td><td align="right">7</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>3608</td><td>RJ</td><td>Itatiaia</td><td align="right">4</td><td align="right">0,00</td></tr>
-                                <tr><td>17</td><td>CORPORATIVO</td><td>3619</td><td>RJ</td><td>Porto Real</td><td align="right">14</td><td align="right">0,00</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <section class="card" id="vidas-resumo">
-                    <div class="data-grid">
-                        <div class="data-row"><span id="cite_label_46" class="cssLabelPrint">Total de Vidas:</span> <span id="field_46" class="value" style="font-size:16px;">645</span></div>
-                    </div>
-                    <div style="margin-top:20px;">
-                        <div class="card-header">
-                            <i class="card-icon">🔄</i>
-                            <h2>Reembolso</h2>
-                        </div>
-                        <div class="data-table-container">
-                            <table class="data-table" id="customgrid_47">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">ID_Plano</th><th scope="col">Plano</th><th scope="col">Reembolso Aplicado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>CORPCPENF</td><td>CORPORATIVO COMPACTO ENF</td><td>1,17x (padrão)</td></tr>
-                                    <tr><td>CORPSUPAP</td><td>CORPORATIVO SUPERIOR APTO</td><td>3x (padrão)</td></tr>
-                                    <tr><td>CORPSUPPAP</td><td>CORPORATIVO SUPERIOR PLUS APTO</td><td>3x (padrão)</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div style="margin-top:20px;">
-                        <div class="card-header">
-                            <i class="card-icon">🔍</i>
-                            <h2>Vidas / Detalhe</h2>
-                        </div>
-                        <div class="data-grid">
-                            <div class="data-row"><span id="cite_label_49" class="cssLabelPrint">Agregados:</span> <span id="field_49" class="value">0</span></div>
-                            <div class="data-row"><span id="cite_label_50" class="cssLabelPrint">Agregados %:</span> <span id="field_50" class="value">0,00</span></div>
-                            <div class="data-row"><span id="cite_label_51" class="cssLabelPrint">Gestante:</span> <span id="field_51" class="value">0</span></div>
-                            <div class="data-row"><span id="cite_label_52" class="cssLabelPrint">Gestante %:</span> <span id="field_52" class="value">0,00</span></div>
-                            <div class="data-row"><span id="cite_label_53" class="cssLabelPrint">Inativos:</span> <span id="field_53" class="value">0</span></div>
-                            <div class="data-row"><span id="cite_label_54" class="cssLabelPrint">Inativos %:</span> <span id="field_54" class="value">0,00</span></div>
-                            <div class="data-row"><span id="cite_label_55" class="cssLabelPrint">Prestadores de Serviço (PJ):</span> <span id="field_55" class="value">0</span></div>
-                            <div class="data-row"><span id="cite_label_56" class="cssLabelPrint">Prestadores de Serviço (PJ) %:</span> <span id="field_56" class="value">0,00</span></div>
-                            <div class="data-row"><span id="cite_label_57" class="cssLabelPrint">Remidos:</span> <span id="field_57" class="value">0</span></div>
-                            <div class="data-row"><span id="cite_label_58" class="cssLabelPrint">Remidos %:</span> <span id="field_58" class="value">0,00</span></div>
-                            <div class="data-row"><span id="cite_label_59" class="cssLabelPrint">Sexo Feminino:</span> <span id="field_59" class="value">132</span></div>
-                            <div class="data-row"><span id="cite_label_60" class="cssLabelPrint">Sexo Feminino %:</span> <span id="field_60" class="value">20,47</span></div>
-                            <div class="data-row"><span id="cite_label_61" class="cssLabelPrint">Percentual Contribuição Seg Acima Limite:</span> <span id="field_61" class="value">0,00</span></div>
-                            <div class="data-row"><span id="cite_label_62" class="cssLabelPrint">Transtorno de Ansiedade Generalizada:</span> <span id="field_62" class="value">Não</span></div>
-                            <div class="data-row"><span id="cite_label_63" class="cssLabelPrint">Transtorno do Espectro Autista:</span> <span id="field_63" class="value">Não</span></div>
-                            <div class="data-row"><span id="cite_label_64" class="cssLabelPrint">Transtorno Geral de Desenvolvimento (TGD):</span> <span id="field_64" class="value">Não</span></div>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="card" id="fatores-motores">
-                    <div class="card-header">
-                        <i class="card-icon">🧠</i>
-                        <h2>Fatores - Motor de Cálculos - Inicial</h2>
-                    </div>
-                    <div class="data-grid">
-                        <div class="data-row"><span id="cite_label_66" class="cssLabelPrint">Corretagem (%):</span> <span id="field_66" class="value">5,00</span></div>
-                        <div class="data-row"><span id="cite_label_67" class="cssLabelPrint">Pró-Labore (%):</span> <span id="field_67" class="value">0,00</span></div>
-                        <div class="data-row"><span id="cite_label_68" class="cssLabelPrint">Agenciamento (%):</span> <span id="field_68" class="value">100,00</span></div>
-                        <div class="data-row"><span id="cite_label_69" class="cssLabelPrint">Limite Mensal de Agenciamento (%):</span> <span id="field_69" class="value">100,00</span></div>
-                        <div class="data-row"><span id="cite_label_70" class="cssLabelPrint">Diluição (meses):</span> <span id="field_70" class="value">12</span></div>
-                        <div class="data-row"><span id="cite_label_71" class="cssLabelPrint">Margem de Lucro (%):</span> <span id="field_71" class="value">5,00</span></div>
-                        <div class="data-row"><span id="cite_label_72" class="cssLabelPrint">Despesa Administrativa (%):</span> <span id="field_72" class="value">11,00</span></div>
-                        <div class="data-row"><span id="cite_label_73" class="cssLabelPrint">Fator CNAE (%):</span> <span id="field_73" class="value">0,00</span></div>
-                    </div>
-                    <div style="margin-top:20px;">
-                        <div class="card-header">
-                            <i class="card-icon">🔧</i>
-                            <h2>Fatores Técnicos</h2>
-                        </div>
-                        <div class="data-grid">
-                            <div class="data-pair-wide"><span class="cite_label">Informações Técnicas Adicionais:</span> <span class="value" id="field_90">Relatório de Sinistralidade;<br>Conta Sujeita à Análise;<br>Tipo de Contratação Sujeito à Análise;<br>Informado Afastado?;<br>Afastado/Caso Crônico Sujeito à Análise?;</span></div>
-                            <div class="data-row"><span id="cite_label_135" class="cssLabelPrint">Break-Even:</span> <span id="field_135" class="value">70,00</span></div>
-                            <div class="data-row"><span id="cite_label_139" class="cssLabelPrint">Exibir Prêmio Médio:</span> <span id="field_139" class="value">Sim</span></div>
-                            <div class="data-row"><span id="cite_label_146" class="cssLabelPrint">Conta Sujeita à Análise (Ajustado):</span> <span id="field_146" class="value">Sim</span></div>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="card" id="analise-parecer">
-                    <div class="card-header">
-                        <i class="card-icon">✔️</i>
-                        <h2>Análise Técnica</h2>
-                    </div>
-                    <div class="data-pair-wide"><span id="cite_label_152" class="label">Informações Adicionais:</span> <span id="field_152" class="value">* Break Even:70%
-* Prazo contratual de 24 meses.
-* Prestadores de serviços pessoa jurídica serão aceitos mediante contrato de prestação de serviço de no mínimo 12 meses e apresentação das últimas 3 notas fiscais de prestação de serviço.
-* Encaminhamos no estudo também tabela por faixa etária para inativos, seguindo as novas normas da RN 488.
-* Caso tenha alguma Unimed local envolvida esta proposta torna-se inválida e sem efeito comercial.
-* Informamos que, para efeito de precificação, a tabela de prêmios considerada foi a correspondente a UF e os demais dados mencionados no pedido de cotação.
-* Os prêmios poderão ser alterados em função da mudança de distribuição do grupo segurável apresentado e/ou informações divergentes do pedido de cotação.
-* Os prêmios informados já contemplam IOF (2,38%).
-* Aceitação de afastados, casos crônicos, internados, em tratamento, home care, gestantes e remidos estão sujeitos a avaliação técnica</span></div>
-                    <div class="data-row"><span id="cite_label_153" class="cssLabelPrint">Alçada para Aprovar:</span> <span id="field_153" class="value">Sim</span></div>
-                    <div style="margin-top:20px;">
-                        <div class="card-header">
-                            <i class="card-icon">🚦</i>
-                            <h2>Parecer Final</h2>
-                        </div>
-                        <div class="data-grid">
-                            <div class="data-row"><span id="cite_label_180" class="cssLabelPrint">Perfil Usuário Atual:</span> <span id="field_180" class="value">Analista Pleno</span></div>
-                            <div class="data-row"><span id="cite_label_181" class="cssLabelPrint">Limite Vidas (Qtd):</span> <span id="field_181" class="value">2000</span></div>
-                            <div class="data-row"><span id="cite_label_182" class="cssLabelPrint">Limite Agravo (%):</span> <span id="field_182" class="value">999</span></div>
-                            <div class="data-row"><span id="cite_label_183" class="cssLabelPrint">Limite Desconto (%):</span> <span id="field_183" class="value">15</span></div>
-                            <div class="data-row"><span id="cite_label_217" class="cssLabelPrint">Distribuição Nível:</span> <span id="field_217" class="value">1</span></div>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="card" id="cotacao-combos">
-                    <div class="card-header">
-                        <i class="card-icon">📇</i>
-                        <h2>Cotação (Cotador)</h2>
-                    </div>
-                    <div class="data-table-container">
-                        <table class="data-table" id="customgrid_164">
-                            <thead>
-                                <tr>
-                                    <th scope="col">ID_Plano</th><th scope="col">Produto</th><th scope="col">Plano</th><th scope="col">00 a 18</th><th scope="col">19 a 23</th><th scope="col">24 a 28</th><th scope="col">29 a 33</th><th scope="col">34 a 38</th><th scope="col">39 a 43</th><th scope="col">44 a 48</th><th scope="col">49 a 53</th><th scope="col">54 a 58</th><th scope="col">59 ou +</th><th scope="col">Total</th><th align="right" scope="col">Faturamento Faixa Etária</th><th align="right" scope="col">Prêmio Médio</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>CORPCPENF</td><td>CORPORATIVO</td><td>CORPORATIVO COMPACTO ENF</td><td>29 (R$ 301,12)</td><td>54 (R$ 368,57)</td><td>60 (R$ 461,50)</td><td>58 (R$ 509,98)</td><td>65 (R$ 543,19)</td><td>78 (R$ 630,09)</td><td>95 (R$ 753,21)</td><td>75 (R$ 903,35)</td><td>51 (R$ 1.072,49)</td><td>57 (R$ 1.806,71)</td><td>622 (R$ 467.344,13)</td><td align="right">467344,13</td><td align="right">773,06</td></tr>
-                                <tr><td>CORPEFAP</td><td>CORPORATIVO</td><td>CORPORATIVO EFETIVO APTO</td><td>29 (R$ 336,95)</td><td>54 (R$ 412,43)</td><td>60 (R$ 516,41)</td><td>59 (R$ 570,67)</td><td>65 (R$ 607,82)</td><td>78 (R$ 705,08)</td><td>98 (R$ 842,85)</td><td>79 (R$ 1.010,86)</td><td>54 (R$ 1.200,12)</td><td>69 (R$ 2.021,71)</td><td>645 (R$ 557.963,15)</td><td align="right">557963,15</td><td align="right">865,06</td></tr>
-                                <tr><td>CORPCPTAP</td><td>CORPORATIVO</td><td>CORPORATIVO COMPLETO APTO</td><td>29 (R$ 397,60)</td><td>54 (R$ 486,67)</td><td>60 (R$ 609,36)</td><td>59 (R$ 673,37)</td><td>65 (R$ 717,23)</td><td>78 (R$ 831,98)</td><td>98 (R$ 994,57)</td><td>79 (R$ 1.192,81)</td><td>54 (R$ 1.416,14)</td><td>69 (R$ 2.385,61)</td><td>645 (R$ 658.393,90)</td><td align="right">658393,90</td><td align="right">1020,77</td></tr>
-                                <tr><td>CORPSUPAP</td><td>CORPORATIVO</td><td>CORPORATIVO SUPERIOR APTO</td><td>0 (R$ 474,12)</td><td>0 (R$ 580,32)</td><td>0 (R$ 726,64)</td><td>1 (R$ 802,96)</td><td>0 (R$ 855,26)</td><td>0 (R$ 992,09)</td><td>3 (R$ 1.185,96)</td><td>4 (R$ 1.422,35)</td><td>3 (R$ 1.688,67)</td><td>9 (R$ 2.844,70)</td><td>20 (R$ 40.718,55)</td><td align="right">40718,55</td><td align="right">1217,20</td></tr>
-                                <tr><td>CORPSUPPAP</td><td>CORPORATIVO</td><td>CORPORATIVO SUPERIOR PLUS APTO</td><td>0 (R$ 530,91)</td><td>0 (R$ 649,84)</td><td>0 (R$ 813,68)</td><td>0 (R$ 899,16)</td><td>0 (R$ 957,71)</td><td>0 (R$ 1.110,94)</td><td>0 (R$ 1.328,02)</td><td>0 (R$ 1.592,74)</td><td>0 (R$ 1.890,96)</td><td>3 (R$ 3.185,48)</td><td>3 (R$ 9.556,44)</td><td align="right">9556,44</td><td align="right">1363,02</td></tr>
-                                <tr><td>CORPSSSAP</td><td>CORPORATIVO</td><td>CORPORATIVO SÊNIOR APTO</td><td>29 (R$ 1.042,64)</td><td>54 (R$ 1.276,19)</td><td>60 (R$ 1.597,94)</td><td>59 (R$ 1.765,82)</td><td>65 (R$ 1.880,81)</td><td>78 (R$ 2.181,72)</td><td>98 (R$ 2.608,06)</td><td>79 (R$ 3.127,91)</td><td>54 (R$ 3.713,56)</td><td>69 (R$ 6.255,83)</td><td>645 (R$ 1.726.516,69)</td><td align="right">1726516,69</td><td align="right">2676,77</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div style="margin-top:20px;">
-                        <div class="card-header">
-                            <i class="card-icon">➕</i>
-                            <h2>Combos Opcionais (Cotador)</h2>
-                        </div>
-                        <div class="data-table-container">
-                            <table class="data-table" id="customgrid_170">
-                                <thead>
-                                    <tr>
-                                        <th align="right" scope="col">Código</th><th scope="col">Preço Unitário</th><th scope="col">Descrição</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td align="right">89</td><td>22,40</td><td>Combo PCMSO</td></tr>
-                                    <tr><td align="right">90</td><td>0,30</td><td>Gestão de Crônicos + Acompanhamento por Telemedicina</td></tr>
-                                    <tr><td align="right">91</td><td>0,75</td><td>Mensageria e-Social</td></tr>
-                                    <tr><td align="right">92</td><td>3,73</td><td>Gestão de Atestados e Afastados</td></tr>
-                                    <tr><td align="right">94</td><td>17,47</td><td>Genérico Tarjado 100</td></tr>
-                                    <tr><td align="right">95</td><td>21,65</td><td>Genérico Tarjado 150</td></tr>
-                                    <tr><td align="right">96</td><td>74,49</td><td>Tarjado 300</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-
-                <div class="card" style="text-align:center; padding:15px; font-size:12px; color:var(--text-label);">
-                    Parecer das Áreas e Alçada do Usuário foram consolidados acima nas seções Análise Técnica e Parecer Final.
-                </div>
-
             </div>
         </div>
-    </form>
-</body></html>```
+    </header>
+
+    <main class="max-w-4xl mx-auto my-10 px-6 flex-grow w-full">
+        
+        <!-- Área de Upload -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <div class="mb-6 text-center md:text-left">
+                <h2 class="text-xl font-bold text-unimed-dark">Importar Relatório</h2>
+                <p class="text-sm text-gray-500 mt-1">Insira o arquivo HTML gerado pelo sistema (Joker PrintForm) para extrair os dados formatados.</p>
+            </div>
+
+            <div id="drop-zone" class="border-2 border-dashed border-gray-300 hover:border-unimed-light rounded-xl p-10 text-center cursor-pointer transition-all bg-gray-50 hover:bg-blue-50/50 group">
+                <input type="file" id="file-input" accept=".html,.htm" class="hidden" />
+                <div class="flex flex-col items-center justify-center space-y-3">
+                    <div class="p-4 bg-white rounded-full shadow-sm group-hover:scale-105 transition-transform">
+                        <svg class="w-10 h-10 text-unimed-light" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-base font-medium text-unimed-dark">Arraste seu relatório HTML aqui</p>
+                        <p class="text-sm text-gray-500 mt-1">ou <span class="text-unimed-light font-semibold hover:underline">busque no computador</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Container de Resultado -->
+        <div id="result-container" class="mt-8 bg-white rounded-2xl shadow-sm border border-gray-200 p-8 hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-unimed-dark flex items-center gap-2">
+                    <svg class="w-5 h-5 text-unimed-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Dados Extraídos com Sucesso
+                </h2>
+                <button id="copy-btn" class="px-5 py-2.5 bg-unimed-light hover:bg-[#008bc2] active:scale-95 text-white text-sm font-semibold rounded-lg transition-all flex items-center gap-2 shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                    Copiar para o Excel
+                </button>
+            </div>
+
+            <div class="relative">
+                <!-- Textarea estilizado -->
+                <textarea id="output-text" readonly class="w-full h-[450px] p-5 font-mono text-sm bg-gray-50 text-unimed-dark rounded-xl border border-gray-200 focus:border-unimed-light focus:ring-1 focus:ring-unimed-light focus:outline-none resize-none custom-scrollbar"></textarea>
+                
+                <!-- Notificação de cópia -->
+                <div id="toast" class="absolute bottom-6 right-6 bg-unimed-green text-white text-sm font-medium px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 transition-opacity duration-300 opacity-0 pointer-events-none">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Copiado para a área de transferência!
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center py-6 text-sm text-gray-400 mt-auto">
+        Desenvolvido para agilizar as operações. Baseado nos relatórios padrão do sistema.
+    </footer>
+
+    <!-- Script de Processamento Lógico -->
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const resultContainer = document.getElementById('result-container');
+        const outputText = document.getElementById('output-text');
+        const copyBtn = document.getElementById('copy-btn');
+        const toast = document.getElementById('toast');
+
+        // Eventos de clique
+        dropZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+        // Efeitos visuais do Drag and Drop
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-unimed-light', 'bg-blue-50/50');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-unimed-light', 'bg-blue-50/50');
+            }, false);
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const file = dt.files[0];
+            handleFile(file);
+        });
+
+        function handleFile(file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                processHTML(content);
+            };
+            reader.readAsText(file);
+        }
+
+        // Lógica de Extração dos Dados
+        function processHTML(htmlText) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlText, 'text/html');
+
+            const getVal = (id) => {
+                const element = doc.getElementById(id);
+                return element ? element.textContent.trim() : '';
+            };
+
+            // Linha 1 a 11
+            const nomeFantasia = getVal('field_17');
+            const cnaeCompleto = getVal('field_22');
+            const cnaeNumeros = cnaeCompleto ? cnaeCompleto.split(' - ')[0] : '';
+            const funcionariosDep = "Funcionários + Dependentes";
+            const modeloElegibilidade = getVal('field_37');
+            const cnpj = getVal('field_15');
+            const nomeCorretor = getVal('field_31');
+            const numCotacao = getVal('field_3');
+            const numCenario = getVal('field_4');
+            const unimed = getVal('field_11');
+            const sexoFeminino = getVal('field_59');
+
+            const outputLines = [
+                nomeFantasia,
+                cnaeNumeros,
+                cnaeCompleto,
+                funcionariosDep,
+                modeloElegibilidade,
+                cnpj,
+                nomeCorretor,
+                numCotacao,
+                numCenario,
+                unimed,
+                sexoFeminino
+            ];
+
+            let finalOutput = outputLines.join('\n');
+
+            // Lógica de Transposição da Tabela de Distribuição Etária
+            const ageTable = doc.getElementById('customgrid_43');
+            if (ageTable) {
+                const rows = Array.from(ageTable.querySelectorAll('tr'));
+                if (rows.length > 0) {
+                    const headerCells = Array.from(rows[0].querySelectorAll('th, td'));
+                    const ageHeaders = headerCells.slice(3).map(cell => cell.textContent.trim());
+
+                    const dataRows = rows.slice(1);
+                    const plansData = dataRows.map(row => {
+                        const cells = Array.from(row.querySelectorAll('td'));
+                        if (cells.length >= 4) {
+                            const planName = cells[2].textContent.trim();
+                            const values = cells.slice(3).map(cell => cell.textContent.trim());
+                            return { planName, values };
+                        }
+                        return null;
+                    }).filter(Boolean);
+
+                    if (plansData.length > 0) {
+                        let tHeader = "Faixa Etária\t" + plansData.map(p => p.planName).join('\t');
+                        let tRows = [];
+
+                        for (let i = 0; i < ageHeaders.length; i++) {
+                            let rowLabel = ageHeaders[i];
+                            let rowValues = plansData.map(p => p.values[i] || '0');
+                            tRows.push(rowLabel + '\t' + rowValues.join('\t'));
+                        }
+
+                        finalOutput += '\n\n' + tHeader + '\n' + tRows.join('\n');
+                    }
+                }
+            }
+
+            outputText.value = finalOutput;
+            resultContainer.classList.remove('hidden');
+            
+            // Foca suavemente no resultado
+            resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Sistema de Cópia e Notificação Visual
+        copyBtn.addEventListener('click', () => {
+            if (!outputText.value) return;
+            
+            navigator.clipboard.writeText(outputText.value).then(() => {
+                toast.classList.remove('opacity-0');
+                setTimeout(() => {
+                    toast.classList.add('opacity-0');
+                }, 2500);
+            });
+        });
+    </script>
+</body>
+</html>

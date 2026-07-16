@@ -35,7 +35,7 @@
             </div>
 
             <div class="relative">
-                <textarea id="output-text" readonly class="w-full h-[450px] p-4 font-mono text-sm bg-slate-900 text-slate-100 rounded-xl border border-slate-800 focus:outline-none resize-none"></textarea>
+                <textarea id="output-text" readonly class="w-full h-80 p-4 font-mono text-sm bg-slate-900 text-slate-100 rounded-xl border border-slate-800 focus:outline-none resize-none"></textarea>
                 <div id="toast" class="absolute bottom-4 right-4 bg-emerald-500 text-white text-xs px-3 py-1.5 rounded-md shadow-lg hidden">Copiado!</div>
             </div>
         </div>
@@ -111,7 +111,7 @@
             // 4. Texto Estático
             const funcionariosDep = "Funcionários + Dependentes";
 
-            // 5. Modelo de Elegibilidade (field_37)
+            // 5. Modelo de Elegibilidade (Alterado para o campo field_37)
             const modeloElegibilidade = getVal('field_37');
 
             // 6. CNPJ
@@ -129,10 +129,7 @@
             // 10. Unimed
             const unimed = getVal('field_11');
 
-            // 11. Sexo Feminino (field_59)
-            const sexoFeminino = getVal('field_59');
-
-            // Montagem da lista inicial linha a linha
+            // Montagem da lista linha a linha
             const outputLines = [
                 nomeFantasia,
                 cnaeNumeros,
@@ -143,53 +140,11 @@
                 nomeCorretor,
                 numCotacao,
                 numCenario,
-                unimed,
-                sexoFeminino
+                unimed
             ];
 
-            let finalOutput = outputLines.join('\n');
-
-            // Processamento e transposição da tabela "Distribuição Etária" (ID: customgrid_43)
-            const ageTable = doc.getElementById('customgrid_43');
-            if (ageTable) {
-                const rows = Array.from(ageTable.querySelectorAll('tr'));
-                if (rows.length > 0) {
-                    // Extrai as faixas etárias do cabeçalho original (a partir do índice 3)
-                    const headerCells = Array.from(rows[0].querySelectorAll('th, td'));
-                    const ageHeaders = headerCells.slice(3).map(cell => cell.textContent.trim());
-
-                    // Filtra e organiza os dados de cada plano listado na tabela
-                    const dataRows = rows.slice(1);
-                    const plansData = dataRows.map(row => {
-                        const cells = Array.from(row.querySelectorAll('td'));
-                        if (cells.length >= 4) {
-                            const planName = cells[2].textContent.trim(); // Coluna do nome do Plano
-                            const values = cells.slice(3).map(cell => cell.textContent.trim()); // Quantitativos por faixa
-                            return { planName, values };
-                        }
-                        return null;
-                    }).filter(Boolean);
-
-                    if (plansData.length > 0) {
-                        // Criação do cabeçalho da tabela transposta (Planos em Colunas)
-                        let tHeader = "Faixa Etária\t" + plansData.map(p => p.planName).join('\t');
-                        let tRows = [];
-
-                        // Preenche as linhas (Faixas Etárias nas linhas com seus respectivos valores)
-                        for (let i = 0; i < ageHeaders.length; i++) {
-                            let rowLabel = ageHeaders[i];
-                            let rowValues = plansData.map(p => p.values[i] || '0');
-                            tRows.push(rowLabel + '\t' + rowValues.join('\t'));
-                        }
-
-                        // Concatena os dados gerados abaixo das 11 primeiras linhas de informação geral
-                        finalOutput += '\n\n' + tHeader + '\n' + tRows.join('\n');
-                    }
-                }
-            }
-
             // Exibir no campo de texto
-            outputText.value = finalOutput;
+            outputText.value = outputLines.join('\n');
             resultContainer.classList.remove('hidden');
         }
 

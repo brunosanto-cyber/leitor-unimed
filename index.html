@@ -162,6 +162,9 @@
             const numCenario = getVal('field_4');
             const unimed = getVal('field_11');
             const sexoFeminino = getVal('field_59');
+            
+            // Linha 12: CNPJ sem pontuação (remover pontos, barras e traços)
+            const cnpjLimpo = cnpj.replace(/[./-]/g, '');
 
             const outputLines = [
                 nomeFantasia,
@@ -174,7 +177,8 @@
                 numCotacao,
                 numCenario,
                 unimed,
-                sexoFeminino
+                sexoFeminino,
+                cnpjLimpo
             ];
 
             let finalOutput = outputLines.join('\n');

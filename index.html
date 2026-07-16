@@ -192,7 +192,7 @@
                     const ageHeaders = headerCells.slice(3).map(cell => cell.textContent.trim());
 
                     const dataRows = rows.slice(1);
-                    const plansData = dataRows.map(row => {
+                    let plansData = dataRows.map(row => {
                         const cells = Array.from(row.querySelectorAll('td'));
                         if (cells.length >= 4) {
                             const planName = cells[2].textContent.trim();
@@ -203,6 +203,26 @@
                     }).filter(Boolean);
 
                     if (plansData.length > 0) {
+                        // Ordem preferencial dos Planos solicitada
+                        const preferredOrder = [
+                            "NOVO ESSENCIAL SP III",
+                            "CORPORATIVO COMPACTO ENF CP",
+                            "CORPORATIVO SUPERIOR APTO CP",
+                            "CORPORATIVO SÊNIOR APTO CP"
+                        ];
+
+                        // Aplica a ordenação
+                        plansData.sort((a, b) => {
+                            let indexA = preferredOrder.indexOf(a.planName);
+                            let indexB = preferredOrder.indexOf(b.planName);
+                            
+                            // Se o plano não estiver na lista de preferência, vai para o final
+                            if (indexA === -1) indexA = 999;
+                            if (indexB === -1) indexB = 999;
+                            
+                            return indexA - indexB;
+                        });
+
                         let tHeader = "Faixa Etária\t" + plansData.map(p => p.planName).join('\t');
                         let tRows = [];
 

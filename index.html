@@ -196,7 +196,29 @@
 
             let finalOutput = outputLines.join('\n');
 
-            // 1ª Tabela Extra: Transposição de Distribuição Etária
+            // Lista fixa de planos desejados (Ordem exata compartilhada para Idade e Coparticipação)
+            const preferredOrder = [
+                "NOVO ESSENCIAL SP I",
+                "NOVO ESSENCIAL SP II",
+                "NOVO ESSENCIAL SP III",
+                "NOVO ESSENCIAL SP IV",
+                "CORPORATIVO COMPACTO ENF CP",
+                "CORPORATIVO COMPACTO ENF",
+                "CORPORATIVO EFETIVO APTO CP",
+                "CORPORATIVO EFETIVO APTO",
+                "CORPORATIVO COMPLETO APTO CP II",
+                "CORPORATIVO COMPLETO APTO",
+                "CORPORATIVO SUPERIOR APTO CP",
+                "CORPORATIVO SUPERIOR APTO",
+                "CORPORATIVO SUPERIOR PLUS APTO CP",
+                "CORPORATIVO SUPERIOR PLUS APTO",
+                "CORPORATIVO SÊNIOR APTO CP",
+                "CORPORATIVO SÊNIOR APTO"
+            ];
+
+            // ==========================================
+            // 1ª Tabela Extra: Distribuição Etária
+            // ==========================================
             const ageTable = doc.getElementById('customgrid_43');
             if (ageTable) {
                 const rows = Array.from(ageTable.querySelectorAll('tr'));
@@ -204,7 +226,6 @@
                     const headerCells = Array.from(rows[0].querySelectorAll('th, td'));
                     const ageHeaders = headerCells.slice(3).map(cell => cell.textContent.trim());
 
-                    // Objeto para mapear todos os planos encontrados no arquivo HTML
                     const extractedPlans = {};
                     const dataRows = rows.slice(1);
                     dataRows.forEach(row => {
@@ -216,47 +237,24 @@
                         }
                     });
 
-                    // Lista fixa de planos desejados (sempre aparecerão, e nesta ordem exata)
-                    const preferredOrder = [
-                        "NOVO ESSENCIAL SP I",
-                        "NOVO ESSENCIAL SP II",
-                        "NOVO ESSENCIAL SP III",
-                        "NOVO ESSENCIAL SP IV",
-                        "CORPORATIVO COMPACTO ENF CP",
-                        "CORPORATIVO COMPACTO ENF",
-                        "CORPORATIVO EFETIVO APTO CP",
-                        "CORPORATIVO EFETIVO APTO",
-                        "CORPORATIVO COMPLETO APTO CP II",
-                        "CORPORATIVO COMPLETO APTO",
-                        "CORPORATIVO SUPERIOR APTO CP",
-                        "CORPORATIVO SUPERIOR APTO",
-                        "CORPORATIVO SUPERIOR PLUS APTO CP",
-                        "CORPORATIVO SUPERIOR PLUS APTO",
-                        "CORPORATIVO SÊNIOR APTO CP",
-                        "CORPORATIVO SÊNIOR APTO"
-                    ];
-
                     const finalPlansData = [];
 
                     // Etapa 1: Inserir todos os planos da lista de preferência
                     preferredOrder.forEach(planName => {
                         if (extractedPlans[planName]) {
-                            // Se existir no HTML, pega os valores
                             finalPlansData.push({ planName, values: extractedPlans[planName] });
                         } else {
-                            // Se NÃO existir no HTML, preenche todas as faixas com '0'
                             finalPlansData.push({ planName, values: Array(ageHeaders.length).fill('0') });
                         }
                     });
 
-                    // Etapa 2: Inserir planos excedentes encontrados no HTML (se houver) no final
+                    // Etapa 2: Inserir planos excedentes no final
                     Object.keys(extractedPlans).forEach(planName => {
                         if (!preferredOrder.includes(planName)) {
                             finalPlansData.push({ planName, values: extractedPlans[planName] });
                         }
                     });
 
-                    // Construção do cabeçalho e linhas
                     if (finalPlansData.length > 0) {
                         let tHeader = "Faixa Etária\t" + finalPlansData.map(p => p.planName).join('\t');
                         let tRows = [];
@@ -272,44 +270,81 @@
                 }
             }
 
-            // 2ª Tabela Extra: Distribuição de Vidas por Localidade (Cópia exata)
+            // ==========================================
+            // 2ª Tabela Extra: Coparticipação (Mesma lógica e ordem dos planos)
+            // ==========================================
+            const copartTable = doc.getElementById('customgrid_42');
+            if (copartTable) {
+                const copartRows = Array.from(copartTable.querySelectorAll('tr'));
+                if (copartRows.length > 0) {
+                    const headerCells = Array.from(copartRows[0].querySelectorAll('th, td'));
+                    const copartHeaders = headerCells.slice(3).map(cell => cell.textContent.trim());
+
+                    const extractedCopart = {};
+                    const dataRows = copartRows.slice(1);
+                    dataRows.forEach(row => {
+                        const cells = Array.from(row.querySelectorAll('td'));
+                        if (cells.length >= 4) {
+                            const planName = cells[2].textContent.trim();
+                            const values = cells.slice(3).map(cell => {
+                                let val = cell.textContent.trim();
+                                return (val === '' || val === '\u00a0' || val === '&nbsp;') ? '0' : val;
+                            });
+                            extractedCopart[planName] = values;
+                        }
+                    });
+
+                    const finalCopartData = [];
+
+                    // Etapa 1: Inserir planos na mesma ordem com zeros se vazio
+                    preferredOrder.forEach(planName => {
+                        if (extractedCopart[planName]) {
+                            finalCopartData.push({ planName, values: extractedCopart[planName] });
+                        } else {
+                            finalCopartData.push({ planName, values: Array(copartHeaders.length).fill('0') });
+                        }
+                    });
+
+                    // Etapa 2: Inserir planos excedentes no final
+                    Object.keys(extractedCopart).forEach(planName => {
+                        if (!preferredOrder.includes(planName)) {
+                            finalCopartData.push({ planName, values: extractedCopart[planName] });
+                        }
+                    });
+
+                    if (finalCopartData.length > 0) {
+                        let tHeader = "Coparticipação\t" + finalCopartData.map(p => p.planName).join('\t');
+                        let tRows = [];
+
+                        for (let i = 0; i < copartHeaders.length; i++) {
+                            let rowLabel = copartHeaders[i];
+                            let rowValues = finalCopartData.map(p => p.values[i] || '0');
+                            tRows.push(rowLabel + '\t' + rowValues.join('\t'));
+                        }
+
+                        finalOutput += '\n\n' + tHeader + '\n' + tRows.join('\n');
+                    }
+                }
+            }
+
+            // ==========================================
+            // 3ª Tabela Extra: Distribuição de Vidas por Localidade (Cópia exata, posicionada no final)
+            // ==========================================
             const locTable = doc.getElementById('customgrid_44');
             if (locTable) {
                 const locRows = Array.from(locTable.querySelectorAll('tr'));
                 if (locRows.length > 0) {
                     let locOutput = [];
                     locRows.forEach(row => {
-                        // Captura os 'th' (cabeçalho) e 'td' (dados) de cada linha
                         const cells = Array.from(row.querySelectorAll('th, td'));
                         if (cells.length > 0) {
                             const rowData = cells.map(cell => cell.textContent.trim());
-                            // Junta as células com TAB
                             locOutput.push(rowData.join('\t'));
                         }
                     });
                     
                     if (locOutput.length > 0) {
                         finalOutput += '\n\n' + locOutput.join('\n');
-                    }
-                }
-            }
-
-            // 3ª Tabela Extra: Coparticipação (Cópia exata)
-            const copartTable = doc.getElementById('customgrid_42');
-            if (copartTable) {
-                const copartRows = Array.from(copartTable.querySelectorAll('tr'));
-                if (copartRows.length > 0) {
-                    let copartOutput = [];
-                    copartRows.forEach(row => {
-                        const cells = Array.from(row.querySelectorAll('th, td'));
-                        if (cells.length > 0) {
-                            const rowData = cells.map(cell => cell.textContent.trim());
-                            copartOutput.push(rowData.join('\t'));
-                        }
-                    });
-                    
-                    if (copartOutput.length > 0) {
-                        finalOutput += '\n\n' + copartOutput.join('\n');
                     }
                 }
             }

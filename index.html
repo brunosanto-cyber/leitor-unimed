@@ -166,6 +166,10 @@
             // Linha 12: CNPJ sem pontuação (remover pontos, barras e traços)
             const cnpjLimpo = cnpj.replace(/[./-]/g, '');
 
+            // Linha 13 e 14: Corretagem e Agenciamento
+            const corretagem = getVal('field_66');
+            const agenciamento = getVal('field_68');
+
             const outputLines = [
                 nomeFantasia,
                 cnaeNumeros,
@@ -178,7 +182,9 @@
                 numCenario,
                 unimed,
                 sexoFeminino,
-                cnpjLimpo
+                cnpjLimpo,
+                corretagem,
+                agenciamento
             ];
 
             let finalOutput = outputLines.join('\n');

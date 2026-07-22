@@ -166,9 +166,15 @@
             // Linha 12: CNPJ sem pontuação (remover pontos, barras e traços)
             const cnpjLimpo = cnpj.replace(/[./-]/g, '');
 
-            // Linha 13 e 14: Corretagem e Agenciamento
-            const corretagem = getVal('field_66');
-            const agenciamento = getVal('field_68');
+            // Linha 13 e 14: Corretagem e Agenciamento (Adicionando o "%")
+            const corretagemRaw = getVal('field_66');
+            const corretagem = corretagemRaw ? corretagemRaw + '%' : '';
+            
+            const agenciamentoRaw = getVal('field_68');
+            const agenciamento = agenciamentoRaw ? agenciamentoRaw + '%' : '';
+
+            // Linha 15: Diluição (meses)
+            const diluicao = getVal('field_70');
 
             const outputLines = [
                 nomeFantasia,
@@ -184,7 +190,8 @@
                 sexoFeminino,
                 cnpjLimpo,
                 corretagem,
-                agenciamento
+                agenciamento,
+                diluicao
             ];
 
             let finalOutput = outputLines.join('\n');

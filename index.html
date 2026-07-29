@@ -328,54 +328,52 @@
             }
 
             // ==========================================
-            // 3ª Tabela Extra: Reembolso (Apenas números exatos)
+            // 3ª Tabela Extra: Reembolso (Com ou sem tabela no HTML)
             // ==========================================
             const reembTable = doc.getElementById('customgrid_47');
+            const extractedReemb = {};
+
             if (reembTable) {
                 const reembRows = Array.from(reembTable.querySelectorAll('tr'));
                 if (reembRows.length > 0) {
-                    const extractedReemb = {};
                     const dataRows = reembRows.slice(1);
                     dataRows.forEach(row => {
                         const cells = Array.from(row.querySelectorAll('td'));
-                        // No HTML, o plano fica no índice 1 e o valor no índice 2
                         if (cells.length >= 3) {
                             const planName = cells[1].textContent.trim();
                             let value = cells[2].textContent.trim();
-                            
-                            // Remove tudo a partir do "x" (case-insensitive) e tira espaços extras
-                            // Exemplo: "1,17x (padrão)" -> "1,17"
+                            // Remove tudo a partir do "x" (case-insensitive) e tira espaços
                             value = value.split(/x/i)[0].trim();
-                            
                             extractedReemb[planName] = value;
                         }
                     });
-
-                    const finalReembData = [];
-
-                    // Etapa 1: Inserir planos na mesma ordem (deixa sem valor se vazio)
-                    preferredOrder.forEach(planName => {
-                        if (extractedReemb[planName] !== undefined) {
-                            finalReembData.push({ planName, value: extractedReemb[planName] });
-                        } else {
-                            finalReembData.push({ planName, value: '' }); // Sem valor para manter o alinhamento
-                        }
-                    });
-
-                    // Etapa 2: Inserir planos excedentes no final
-                    Object.keys(extractedReemb).forEach(planName => {
-                        if (!preferredOrder.includes(planName)) {
-                            finalReembData.push({ planName, value: extractedReemb[planName] });
-                        }
-                    });
-
-                    if (finalReembData.length > 0) {
-                        let tHeader = "Reembolso\t" + finalReembData.map(p => p.planName).join('\t');
-                        let tRow = "Reembolso Aplicado\t" + finalReembData.map(p => p.value).join('\t');
-                        
-                        finalOutput += '\n\n' + tHeader + '\n' + tRow;
-                    }
                 }
+            }
+
+            const finalReembData = [];
+
+            // Etapa 1: Inserir planos na mesma ordem. Se a tabela não existir, insere valor vazio ('')
+            preferredOrder.forEach(planName => {
+                if (extractedReemb[planName] !== undefined) {
+                    finalReembData.push({ planName, value: extractedReemb[planName] });
+                } else {
+                    finalReembData.push({ planName, value: '' }); 
+                }
+            });
+
+            // Etapa 2: Inserir planos excedentes no final (se houver)
+            Object.keys(extractedReemb).forEach(planName => {
+                if (!preferredOrder.includes(planName)) {
+                    finalReembData.push({ planName, value: extractedReemb[planName] });
+                }
+            });
+
+            // Sempre gera o bloco de reembolso para manter as colunas fixas no Excel
+            if (finalReembData.length > 0) {
+                let tHeader = "Reembolso\t" + finalReembData.map(p => p.planName).join('\t');
+                let tRow = "Reembolso Aplicado\t" + finalReembData.map(p => p.value).join('\t');
+                
+                finalOutput += '\n\n' + tHeader + '\n' + tRow;
             }
 
             // ==========================================

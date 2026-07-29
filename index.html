@@ -328,7 +328,7 @@
             }
 
             // ==========================================
-            // 3ª Tabela Extra: Reembolso 
+            // 3ª Tabela Extra: Reembolso (Apenas números exatos)
             // ==========================================
             const reembTable = doc.getElementById('customgrid_47');
             if (reembTable) {
@@ -341,7 +341,12 @@
                         // No HTML, o plano fica no índice 1 e o valor no índice 2
                         if (cells.length >= 3) {
                             const planName = cells[1].textContent.trim();
-                            const value = cells[2].textContent.trim();
+                            let value = cells[2].textContent.trim();
+                            
+                            // Remove tudo a partir do "x" (case-insensitive) e tira espaços extras
+                            // Exemplo: "1,17x (padrão)" -> "1,17"
+                            value = value.split(/x/i)[0].trim();
+                            
                             extractedReemb[planName] = value;
                         }
                     });
